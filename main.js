@@ -38,7 +38,8 @@ client.on('messageCreate', message => {
         client.commands.get('ping').execute(message,args);
     }
  
-    console.log('messgae is ' + command);
+    console.log('message is ' + command);
+    console.log('argument is ' + args);
 
 });
 
