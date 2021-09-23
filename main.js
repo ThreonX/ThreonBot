@@ -37,6 +37,9 @@ client.on('messageCreate', message => {
     if (command === 'ping') {
         client.commands.get('ping').execute(message,args);
     }
+    else if (command === 'play') {
+        client.commands.get('play').execute(message,args);
+    }
  
     console.log('message is ' + command);
     console.log('argument is ' + args);
