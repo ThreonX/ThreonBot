@@ -48,6 +48,9 @@ module.exports = {
             player.on('stateChange', (oldState, newState) => {
                 console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
             });
+            player.on('error', () => {
+                message.channel.send('Error connection reset');
+            })
         }
         else {
             message.channel.send("Video not found");

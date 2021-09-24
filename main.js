@@ -38,7 +38,7 @@ client.on('messageCreate', message => {
     if (command === 'ping') {
         client.commands.get('ping').execute(message,args);
     }
-    else if (command === 'play') {
+    else if (command === 'play' || command === 'p') {
         client.commands.get('play').execute(message,args);
     }
  
@@ -47,10 +47,7 @@ client.on('messageCreate', message => {
 
 });
 
-client.on('error', error => {
-    console.log(error);
-    // Do something eg. Log the Error
-});
+
 
 
 
