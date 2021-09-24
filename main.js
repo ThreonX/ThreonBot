@@ -47,6 +47,11 @@ client.on('messageCreate', message => {
 
 });
 
+client.on('error', error => {
+    console.log(error);
+    // Do something eg. Log the Error
+});
+
 
 
 // login
