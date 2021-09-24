@@ -44,7 +44,7 @@ module.exports = {
             //setup player
             player.play(resource);
             message.reply(`Now Playing ${video.title}`);
-            console.log(generateDependencyReport());    
+            // console.log(generateDependencyReport());    //// display version information
             player.on('stateChange', (oldState, newState) => {
                 console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
             });
