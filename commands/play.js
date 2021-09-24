@@ -1,48 +1,59 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const { VoiceChannel } = require('discord.js');
+const { generateDependencyReport, AudioResource, createAudioResource, NoSubscriberBehavior, createAudioPlayer, joinVoiceChannel, VoiceConnectionStatus, AudioPlayerStatus } = require ('@discordjs/voice');
+const { join } = require('path');
 
 
 module.exports = {
     name: 'play',
     description: 'placeholder',
-    async execute(message, args){
-        //get memebr voice channel
-        console.log("here");
+    async execute(message, args){   
         const voiceChannel = message.member.voice.channel;
-        console.log(voiceChannel);
-
-        // checks
         if(!voiceChannel) return message.channel.send("You need to be in a voice channel to play");
         if (!args.length) return message.channel.send('Play what?');
-
-
-
-        /////////////////////////////THIS WILL NOT WORK IN V13
-    
-        const connection = await voiceChannel.join();
-        
+        // create a connection, joining a voice channel the message sender is in.
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: voiceChannel.guild.id,
+            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+        });
+        connection.on('stateChange', (oldState, newState) => {
+            console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
+        });
+        // create an audio player
+        const player = createAudioPlayer({
+            behavoirs: {
+                NoSubscriber: NoSubscriberBehavior.Pause,
+            }
+        });
+        // create an audio resource from Youtube
         const videoFinder = async (query) => {
             const videoResult = await ytSearch(query);
-            return(videoResult.videos.lenth > 1) ? videoResult.videos[0] : null;
+            return(videoResult.videos.length > 1) ? videoResult.videos[0] : null;
         }
-
-        const video = await videoFinder(args.join(' '));
-       
+        const video = await videoFinder(args.join(' '));  
         if (video) {
-            const stream = ytdl(video.url, {filter: 'audioonly'});
-            connection.play(stream, {seek: 0, volume: 1})
-            .on('finish', () =>{
-                VoiceChannel.leave();
+            // get a readable stream
+            const stream = ytdl(video.url, {filter: 'audioonly'}); 
+            const resource = createAudioResource(stream);
+            
+            // playing audio through subscription of an audioplayer
+            const subscription = connection.subscribe(player);
 
+            //setup player
+            player.play(resource);
             message.reply(`Now Playing ${video.title}`);
-            })
+            console.log(generateDependencyReport());    
+            player.on('stateChange', (oldState, newState) => {
+                console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
+            });
         }
         else {
             message.channel.send("Video not found");
+            return;
         } 
 
-        
 
     }
 }
