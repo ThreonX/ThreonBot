@@ -6,7 +6,9 @@ const { token } = require('./config.json');
 
 client.once ('ready', () => {
     console.log('Ready');
+
 });
+
 
 // parameters setup for code
 const prefix = '!';
@@ -41,11 +43,14 @@ client.on('messageCreate', message => {
     else if (command === 'play' || command === 'p') {
         client.commands.get('play').execute(message,args);
     }
-    else if (command === 'quit') {
+    else if (command === 'quit' || command === 'q') {
         client.commands.get('quit').execute(message,args);
     }
+    else if (command === 'pause' ) {
+        client.commands.get('pause').execute(message,args);
+    }
  
-    console.log('message is ' + command);
+    console.log('command is ' + command);
     console.log('argument is ' + args);
 
 });

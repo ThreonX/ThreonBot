@@ -1,12 +1,13 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
-const {  createAudioResource, NoSubscriberBehavior, createAudioPlayer, joinVoiceChannel } = require ('@discordjs/voice');
+const { NoSubscriberBehavior, createAudioPlayer } = require ('@discordjs/voice');
+const {  createAudioResource, joinVoiceChannel } = require ('@discordjs/voice');
 
 
 module.exports = {
     name: 'play',
     description: 'placeholder',
-    async execute(message, args){   
+    async execute(message, args, audioPlayer){   
         const memberVoiceChannel = message.member.voice.channel;
         if(!memberVoiceChannel) return message.channel.send("You need to be in a voice channel to play");
         if (!args.length) return message.channel.send('Play what?');
@@ -19,12 +20,7 @@ module.exports = {
         connection.on('stateChange', (oldState, newState) => {
             console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
         });
-        // create an audio player
-        const audioPlayer = createAudioPlayer({
-            behavoirs: {
-                NoSubscriber: NoSubscriberBehavior.Pause,
-            }
-        });
+
         // create an audio resource from Youtube
         const videoFinder = async (query) => {
             const videoResult = await ytSearch(query);
@@ -36,6 +32,15 @@ module.exports = {
             const stream = ytdl(video.url, {filter: 'audioonly'}); 
             const resource = createAudioResource(stream);
             
+            // create an audio player
+            const audioPlayer = createAudioPlayer({
+                behavoirs: {
+                    NoSubscriber: NoSubscriberBehavior.Pause,
+                }
+            });
+            // define the player as client.player to easily access it 
+            message.client.audioPlayer = audioPlayer;
+
             // playing audio through subscription of an audioplayer
             connection.subscribe(audioPlayer);
 
