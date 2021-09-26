@@ -7,20 +7,20 @@ module.exports = {
     name: 'play',
     description: 'placeholder',
     async execute(message, args){   
-        const voiceChannel = message.member.voice.channel;
-        if(!voiceChannel) return message.channel.send("You need to be in a voice channel to play");
+        const memberVoiceChannel = message.member.voice.channel;
+        if(!memberVoiceChannel) return message.channel.send("You need to be in a voice channel to play");
         if (!args.length) return message.channel.send('Play what?');
         // create a connection, joining a voice channel the message sender is in.
         const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: voiceChannel.guild.id,
-            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+            channelId: memberVoiceChannel.id,
+            guildId: memberVoiceChannel.guild.id,
+            adapterCreator: memberVoiceChannel.guild.voiceAdapterCreator,
         });
         connection.on('stateChange', (oldState, newState) => {
             console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
         });
         // create an audio player
-        const player = createAudioPlayer({
+        const audioPlayer = createAudioPlayer({
             behavoirs: {
                 NoSubscriber: NoSubscriberBehavior.Pause,
             }
@@ -37,16 +37,16 @@ module.exports = {
             const resource = createAudioResource(stream);
             
             // playing audio through subscription of an audioplayer
-            connection.subscribe(player);
+            connection.subscribe(audioPlayer);
 
             //setup player
-            player.play(resource);
+            audioPlayer.play(resource);
             message.reply(`Now Playing ${video.title}`);
             // console.log(generateDependencyReport());    //// display version information
-            player.on('stateChange', (oldState, newState) => {
+            audioPlayer.on('stateChange', (oldState, newState) => {
                 console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
             });
-            player.on('error', () => {
+            audioPlayer.on('error', () => {
                 message.channel.send('Error connection reset');
             })
         }

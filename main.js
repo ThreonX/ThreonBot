@@ -41,6 +41,9 @@ client.on('messageCreate', message => {
     else if (command === 'play' || command === 'p') {
         client.commands.get('play').execute(message,args);
     }
+    else if (command === 'quit') {
+        client.commands.get('quit').execute(message,args);
+    }
  
     console.log('message is ' + command);
     console.log('argument is ' + args);
