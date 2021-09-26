@@ -46,12 +46,13 @@ module.exports = {
 
             //setup player
             audioPlayer.play(resource);
-            message.reply(`Now Playing ${video.title}`);
+            message.channel.send(`Now Playing ${video.title}`);
             // console.log(generateDependencyReport());    //// display version information
             audioPlayer.on('stateChange', (oldState, newState) => {
                 console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
             });
-            audioPlayer.on('error', () => {
+            audioPlayer.on('error', (error) => {
+                console.log(error);
                 message.channel.send('Error connection reset');
             })
         }
