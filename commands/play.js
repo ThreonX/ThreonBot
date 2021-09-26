@@ -7,7 +7,7 @@ const {  createAudioResource, joinVoiceChannel } = require ('@discordjs/voice');
 module.exports = {
     name: 'play',
     description: 'placeholder',
-    async execute(message, args, audioPlayer){   
+    async execute(message, args) {   
         const memberVoiceChannel = message.member.voice.channel;
         if(!memberVoiceChannel) return message.channel.send("You need to be in a voice channel to play");
         if (!args.length) return message.channel.send('Play what?');
