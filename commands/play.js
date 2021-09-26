@@ -1,8 +1,6 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
-const { VoiceChannel } = require('discord.js');
-const { generateDependencyReport, AudioResource, createAudioResource, NoSubscriberBehavior, createAudioPlayer, joinVoiceChannel, VoiceConnectionStatus, AudioPlayerStatus } = require ('@discordjs/voice');
-const { join } = require('path');
+const {  createAudioResource, NoSubscriberBehavior, createAudioPlayer, joinVoiceChannel } = require ('@discordjs/voice');
 
 
 module.exports = {
@@ -39,7 +37,7 @@ module.exports = {
             const resource = createAudioResource(stream);
             
             // playing audio through subscription of an audioplayer
-            const subscription = connection.subscribe(player);
+            connection.subscribe(player);
 
             //setup player
             player.play(resource);
