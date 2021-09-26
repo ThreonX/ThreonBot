@@ -2,7 +2,7 @@ const { AudioPlayerStatus, PlayerSubscription } = require('@discordjs/voice');
 
 module.exports = {
     name: 'pause',
-    description: 'pause the audio player',
+    description: 'toggle pause the audio player',
     execute(message, args){
         
         // check if member is in a voice channel
