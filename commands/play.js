@@ -21,7 +21,7 @@ module.exports = {
             console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
         });
 
-        // create an audio resource from Youtube
+        // ytdl create an audio resource from Youtube
         const videoFinder = async (query) => {
             const videoResult = await ytSearch(query);
             return(videoResult.videos.length > 1) ? videoResult.videos[0] : null;
@@ -29,7 +29,8 @@ module.exports = {
         const video = await videoFinder(args.join(' '));  
         if (video) {
             // get a readable stream
-            const stream = ytdl(video.url, {filter: 'audioonly'}); 
+            const stream = ytdl(video.url, {filter: 'audioonly',highWaterMark: 1 << 25 }); 
+            console.log('The value of highWaterMark is ' + stream.readableHighWaterMark);
             const resource = createAudioResource(stream);
             
             // create an audio player
