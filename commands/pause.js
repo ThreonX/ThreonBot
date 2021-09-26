@@ -1,4 +1,3 @@
-const { AudioPlayerStatus, PlayerSubscription } = require('@discordjs/voice');
 
 module.exports = {
     name: 'pause',
