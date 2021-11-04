@@ -1,20 +1,19 @@
 
 // setup for discord
-const { Client, Intents, Message, MessageEmbed, DiscordAPIError, Collection } = require('discord.js');
+const { Client, Intents, Collection } = require('discord.js');
 const client = new Client({intents : [Intents.FLAGS.GUILD_MESSAGES , Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES ]});
 const { token } = require('./config.json');
 
 client.once ('ready', () => {
     console.log('Ready');
-
 });
 
 
-// parameters setup for code
+// setting command prefix
 const prefix = '!';
 
+// getting commands js from file system
 const fs = require('fs');
-const { channel } = require('diagnostics_channel');
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -23,40 +22,23 @@ for (const file of commandFiles) {
 }
 
 
-/**
- * respons on message create
- */
+// response on a message
 client.on('messageCreate', message => {
-
     // return if not a ! type command
     if (!message.content.startsWith(prefix)){
         return;
     }
-    
     // get command and arguments
     const args = message.content.substr(prefix.length).split(/ +/);
     const command = args.shift();
-
-    if (command === 'ping') {
-        client.commands.get('ping').execute(message,args);
+    try {
+        client.commands.get(`${command}`).execute(message, args); 
+        console.log('command is ' + command);
+        console.log('argument is ' + args);
+    } catch (err) {
+        console.log(err);
     }
-    else if (command === 'play' || command === 'p') {
-        client.commands.get('play').execute(message,args);
-    }
-    else if (command === 'quit' || command === 'q') {
-        client.commands.get('quit').execute(message,args);
-    }
-    else if (command === 'pause' ) {
-        client.commands.get('pause').execute(message,args);
-    }
- 
-    console.log('command is ' + command);
-    console.log('argument is ' + args);
-
 });
-
-
-
 
 
 // login
