@@ -1,8 +1,8 @@
 
 module.exports = {
     name: 'quit',
-    description: 'leave the channel',
-    execute(message, args){
+    description: 'make the bot leave the channel',
+    execute(message){
         const memberVoiceChannel = message.member.voice.channel;
 
         // if member is not in a channel, they cannot quit the bot
@@ -10,9 +10,13 @@ module.exports = {
 
 
         memberVoiceChannel.queue = undefined;
-        memberVoiceChannel.connection.destroy();
         memberVoiceChannel.player = undefined;
-        console.log(`connection is destoried, its value is ${memberVoiceChannel.connection.state.status}`);
+        try{
+            memberVoiceChannel.connection.destroy();
+            console.log(`connection is destoried, its value is ${memberVoiceChannel.connection.state.status}`);
+        } catch {
+            message.channel.send('Bot is not in the channel');
+        }
         console.log(`queue is ${memberVoiceChannel.queue}`);
         console.log(`player is ${memberVoiceChannel.player}`);
 

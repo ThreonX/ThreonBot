@@ -1,7 +1,7 @@
 module.exports = {
     name: 'seek',
-    description: 'placeholder',
-    execute(message, args){
+    description: 'Feature not ready yet',
+    execute(message){
         message.channel.send('Feature not ready yet');
     }
 }

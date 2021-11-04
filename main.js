@@ -25,6 +25,14 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+let allCommands = 'Here are all the commands: \n'
+    
+client.commands.forEach((value, key) => {
+    allCommands += `**!${key}** -- ${value.description} \n`
+});
+
+
+
 
 // response on a message
 client.on('messageCreate', message => {
@@ -41,7 +49,8 @@ client.on('messageCreate', message => {
         client.commands.get(`${command}`).execute(message, args); 
     } catch (err) {
         console.log(err);
-        message.channel.send(`Your command ${command} is invalid`);
+        message.channel.send(`Your command **${command}** is invalid`);
+        message.channel.send(allCommands);
     }
 });
 
