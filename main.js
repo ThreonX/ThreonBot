@@ -6,8 +6,12 @@ const { token } = require('./config.json');
 
 client.once ('ready', () => {
     console.log('Ready');
+    initialize();
 });
 
+function initialize() {
+    
+}
 
 // setting command prefix
 const prefix = '!';
@@ -30,13 +34,14 @@ client.on('messageCreate', message => {
     }
     // get command and arguments
     const args = message.content.substr(prefix.length).split(/ +/);
-    const command = args.shift();
+    const command = args.shift();        
+    console.log('\n\ncommand is ' + command);
+    console.log('argument is ' + args);
     try {
         client.commands.get(`${command}`).execute(message, args); 
-        console.log('command is ' + command);
-        console.log('argument is ' + args);
     } catch (err) {
         console.log(err);
+        message.channel.send(`Your command ${command} is invalid`);
     }
 });
 
